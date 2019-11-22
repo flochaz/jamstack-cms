@@ -8,28 +8,42 @@ import { graphql } from 'gatsby'
 import { highlight } from '../theme'
 import PostList from '../components/postList'
 import checkNodeData from '../utils/checkNodeData'
+import {fetchPosts} from '../providers/apiProviders/appsyncProvider';
 
 import { Auth } from 'aws-amplify'
 
 class BlogIndex extends React.Component {
   state = {
-    isAdmin: false
+    isAdmin: false,
+    posts: []
   }
-  componentDidMount() {
-    Auth.currentAuthenticatedUser()
-      .then(user => {
-        if  (user.signInUserSession.idToken.payload['cognito:groups']) {
-          const groups = user.signInUserSession.idToken.payload['cognito:groups']
-          if (groups.includes("Admin")) {
-            this.setState({ isAdmin: true })
-          }
+  async componentDidMount() {
+    let user; 
+    try {
+      console.log(`get user data`);
+      user = await Auth.currentAuthenticatedUser();
+      if  (user.signInUserSession.idToken.payload['cognito:groups']) {
+        const groups = user.signInUserSession.idToken.payload['cognito:groups']
+        if (groups.includes("Admin")) {
+          this.setState({ isAdmin: true })
         }
-        
-      })
-      .catch(err => console.log(err));
+      }
+    } catch(err) {
+      console.log(err);
+      console.log(`get unauth user `);
+      user = await Auth.currentCredentials()
+      console.log(` unauth user : ${user} `);
+    }
+
+    console.log(`fetch posts`);
+    const posts = await fetchPosts();
+    if(posts) {
+      this.setState({posts: posts});
+    }
   }
   render() {
-    let posts = this.props.data.appsync.itemsByContentType.items.filter(post => post.published)
+    let posts = this.state.posts.filter(post => post.published)
+    console.log(`posts ${JSON.stringify(posts)}`);
     posts = posts.reverse()
     let authorImages = checkNodeData(this.props.data.allAuthorImages)
     if (authorImages) {

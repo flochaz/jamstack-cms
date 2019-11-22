@@ -38,11 +38,13 @@ function PostList ({
       {posts.map((post, index) => {
         const widthType = widthIndexes[index]
         let cover_image = post.cover_image
+        console.log(`cover_image: ${cover_image}`)
         let signed_image = null
         if (cover_image) {
-          cover_image = `./downloads/${getImageKey(post.cover_image)}`
+          //cover_image = `./downloads/${getImageKey(post.cover_image)}`
           signed_image = post.signedImage
         }
+        console.log(`cover_image after change: ${cover_image}`)
         const title = post.title
         let link = slugify(post.title)
         if (isAdmin) {

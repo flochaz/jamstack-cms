@@ -4,7 +4,6 @@ import styledAuthenticator from '../components/styledAuthenticator'
 import NewPost from '../components/newPost'
 import NewPage from '../components/newPage'
 import Layout from '../layouts/mainLayout'
-import { itemsByContentType, listPages } from '../graphql/queries'
 import { deletePost, updatePost, deletePage, updatePage } from '../graphql/mutations'
 import { css } from "@emotion/core"
 import TitleComponent from '../components/titleComponent'
@@ -17,7 +16,7 @@ import { toast } from 'react-toastify'
 import JakobsLoader from '../components/jakobsLoader'
 import { BlogContext } from '../context/mainContext'
 import { graphql } from 'gatsby'
-import getSignedImage from '../utils/getSignedImage'
+import {fetchPages, fetchPosts} from '../providers/apiProviders/appsyncProvider';
 
 class Admin extends React.Component {
   state = {
@@ -34,13 +33,15 @@ class Admin extends React.Component {
   mounted = false
   async componentDidMount() {
     this.mounted = true
-    this.fetchPosts()
-    this.fetchPages()
     try {
+      const postsWithSignedImages = await fetchPosts();
+      const pages = fetchPages();
       const media = await Storage.list('')
       const images = media.map(k => Storage.get(k.key))
       const signedImages = await Promise.all(images)
       if (this.mounted) {
+        this.setState({ pages })
+        this.setState({ posts: postsWithSignedImages, isLoading: false })
         this.setState({ images: signedImages }, () => {
           this.setImagesInUse()
         })
@@ -57,34 +58,7 @@ class Admin extends React.Component {
   componentWillUnmount(){
     this.mounted = false;
   }
-  fetchPages = async () => {
-    try {
-      const pageData = await API.graphql(graphqlOperation(listPages))
-      const { items: pages } = pageData.data.listPages
-      if (this.mounted) {
-        this.setState({ pages })
-      }
-    } catch (err) {
-      console.log('error fetching posts:', err)
-    }
-  }
-  fetchPosts = async () => {
-    try {
-      const postData = await API.graphql(graphqlOperation(itemsByContentType, { limit: 500, contentType: "Post" }))
-      const { items: posts } = postData.data.itemsByContentType
-      const postsWithSignedImages = await Promise.all(posts.map(async post => {
-        if (!post.cover_image) return post
-        const signedImage = await getSignedImage(post.cover_image)
-        post['signedImage'] = signedImage
-        return post
-      }))
-      if (this.mounted) {
-        this.setState({ posts: postsWithSignedImages, isLoading: false })
-      }
-    } catch (err) {
-      console.log('error fetching posts:', err)
-    }
-  }
+
   removeImage = (image) => {
     const images = [...this.state.images.filter(i => i !== image)]
     this.setState({ images }, () => {
@@ -289,7 +263,7 @@ class Admin extends React.Component {
               <Layout noPadding>
                 <NewPost
                   toggleViewState={this.toggleViewState}
-                  fetchPosts={this.fetchPosts}
+                  fetchPosts={fetchPosts}
                 />
               </Layout>
             )
@@ -330,7 +304,7 @@ class Admin extends React.Component {
                   <PageList
                     pages={this.state.pages}
                     deletePage={this.deletePage}
-                    fetchPages={this.fetchPages}
+                    fetchPages={fetchPages}
                     publishPage={this.publishPage}
                     unpublishPage={this.unpublishPage}
                     toggleViewState={this.toggleViewState}

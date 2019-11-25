@@ -24,6 +24,8 @@ type Comment @model @auth(
   rules: [
     { allow: groups, groups: ["Admin"], operations: [create, update, delete] },
     { allow: owner, ownerField: "createdBy", operations: [create, update, delete] }
+                  { allow: private, operations: [read]}
+              { allow: public, operations: [read]}
   ]
 ) {
   id: ID!

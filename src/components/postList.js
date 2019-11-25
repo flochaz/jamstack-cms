@@ -33,6 +33,7 @@ function PostList ({
       </div>
     )
   }
+  console.log(`postList: ${JSON.stringify(posts)}`);
   return (
     <div css={[postListContainer(isAdmin)]}>
       {posts.map((post, index) => {

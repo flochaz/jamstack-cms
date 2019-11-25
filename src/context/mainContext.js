@@ -58,7 +58,7 @@ class ContextProviderComponent extends React.Component {
     Auth.currentAuthenticatedUser()
       .then(user => {
         const { payload } = user.signInUserSession.idToken
-        const groups = payload['cognito:groups']
+        const groups = payload['cognito:groups'] ? payload['cognito:groups'] : []
         if (groups.includes("Admin")) {
           this.updateIsAdmin(true)
         }

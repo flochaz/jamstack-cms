@@ -10,7 +10,7 @@ import PostList from '../components/postList'
 import checkNodeData from '../utils/checkNodeData'
 import {fetchPosts} from '../providers/apiProviders/appsyncProvider';
 
-import { Auth } from 'aws-amplify'
+import Amplify, { Auth } from 'aws-amplify'
 
 class BlogIndex extends React.Component {
   state = {
@@ -30,16 +30,24 @@ class BlogIndex extends React.Component {
       }
     } catch(err) {
       console.log(err);
-      console.log(`get unauth user `);
-      user = await Auth.currentCredentials()
-      console.log(` unauth user : ${user} `);
+      const aws_api_key= {
+        "aws_appsync_authenticationType": "API_KEY",
+        'aws_appsync_apiKey': "da2-fakeApiId123456",
+    };
+    
+    Amplify.configure({...aws_api_key})
     }
 
     console.log(`fetch posts`);
-    const posts = await fetchPosts();
-    if(posts) {
-      this.setState({posts: posts});
+    try{
+      const posts = await fetchPosts();
+      if(posts) {
+        this.setState({posts: posts});
+      }
+    } catch (error) {
+      console.log(error);
     }
+    
   }
   render() {
     let posts = this.state.posts.filter(post => post.published)

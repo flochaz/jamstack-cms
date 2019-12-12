@@ -71,6 +71,13 @@ export const listPosts = `query ListPosts(
       previewEnabled
       categories
       contentType
+      author {
+        id
+        name
+        username
+        avatarUrl
+        owner
+      }
     }
     nextToken
   }

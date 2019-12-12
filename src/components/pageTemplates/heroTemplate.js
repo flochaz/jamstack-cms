@@ -10,6 +10,7 @@ import Button from '../button'
 
 import Header from './HeaderTemplate'
 import Code from './CodeTemplate'
+import Iframe from './IframeTemplate'
 import Paragraph from './ParagraphTemplate'
 import SubHeading from './SubHeading'
 import ImageComponent from './imageComponent'
@@ -31,6 +32,9 @@ function getPageHtml(components) {
     let newHtml = `${acc}${next.content}`
     if (next.type === 'image') {
       newHtml = `${acc}${next.content.imageHtml}`
+    }
+    if (next.type === 'iframe') {
+      newHtml = `${acc}${next.content.iframeHtml}`
     }
     return newHtml
   }, ``)
@@ -102,8 +106,10 @@ class HeroTemplate extends React.Component {
   }
 
   updatePageHtml = () => {
+    console.log(`updatePageHtml`);
     const pageHtml = getPageHtml(this.state.components)
-    this.setState(() => ({ pageHtml }))
+    console.log(`pageHtml = ${pageHtml}`);
+    this.setState({ pageHtml: pageHtml })
   }
 
   updatePageTitle = event => {
@@ -233,7 +239,7 @@ class HeroTemplate extends React.Component {
   }
   render() {
     const { width, theme } = this.props.context
-    let { slug, components, currentView, pageHtml, pageTitle, isSaving, isPublished, isPublishing, isUnpublishing } = this.state
+    let { slug, components, currentView, pageHtml, pageTitle, isSaving, isPublished, isPublishing, isUnpublishing } = this.state;
     const location = window.location.pathname.includes('/editpage') ? 'edit' : 'main'
     
     return (
@@ -254,6 +260,7 @@ class HeroTemplate extends React.Component {
             <p onClick={() => this.createComponent('subheading')} css={componentCreatorStyle(theme)}>Subheading</p>
             <p onClick={() => this.createComponent('image')} css={componentCreatorStyle(theme, true)}>Image</p>
             <p onClick={() => this.createComponent('code')} css={componentCreatorStyle(theme, true)}>Code</p>
+            <p onClick={() => this.createComponent('iframe')} css={componentCreatorStyle(theme, true)}>Iframe</p>
             {/* <p onClick={() => this.createComponent('pwithimage')} css={componentCreatorStyle(theme, true)}>Paragraph with Image</p> */}
           </div>
           <div css={[pageContentButtonContainerStyle()]}>
@@ -366,6 +373,14 @@ function createComponent(type, content) {
         component: Code,
         content: content ? content : '',
         type: 'code'
+      }
+      break
+      case 'iframe':
+        component = {
+        ...component,
+        component: Iframe,
+        content: content ? content : '',
+        type: 'iframe'
       }
       break
     default:

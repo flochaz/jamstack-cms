@@ -1,6 +1,6 @@
 projects:
   jamstackcms:
-    schemaPath: src/graphql/schema.json
+    schemaPath: amplify/backend/api/jamstackcms/build/schema.graphql
     includes:
       - src/graphql/**/*.js
     excludes:

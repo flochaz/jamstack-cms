@@ -35,12 +35,12 @@ class Admin extends React.Component {
     this.mounted = true
     try {
       const postsWithSignedImages = await fetchPosts();
-      const pages = fetchPages();
+      const pages = await fetchPages();
       const media = await Storage.list('')
       const images = media.map(k => Storage.get(k.key))
       const signedImages = await Promise.all(images)
       if (this.mounted) {
-        this.setState({ pages })
+        this.setState({ pages: pages })
         this.setState({ posts: postsWithSignedImages, isLoading: false })
         this.setState({ images: signedImages }, () => {
           this.setImagesInUse()

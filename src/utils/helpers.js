@@ -53,13 +53,21 @@ function getImageSource(imageInfo) {
   return src
 }
 
+function getIframeSource(imageInfo) {
+  const tmp = document.createElement('div')
+  tmp.innerHTML = imageInfo
+  const src = tmp.querySelector('iframe').getAttribute('src')
+  return src
+}
+
 const helpers = {
   slugify,
   generatePreviewLink,
   copyToClipboard,
   getTrimmedKey,
   getCleanedFileName,
-  getImageSource
+  getImageSource,
+  getIframeSource
 }
 
 module.exports = helpers

@@ -71,22 +71,19 @@ class BaseLayout extends React.Component {
               <Link to="/" css={linkContainer}>
                 <p css={[link(theme)]}>Blog</p>
               </Link>
-              <Link to="/about" css={linkContainer}>
-                <p css={[link(theme)]}>About Me</p>
-              </Link>
+              {
+                slugs.length > Number(0) && slugs.map((slug) => (
+                  <Link key={slug} to={`/${slug}`} css={linkContainer}>
+                    <p css={[link(theme)]}>{titleCase(slug)}</p>
+                  </Link>
+                ))
+              }
               {
                 isAdmin && (
                   <Link to="/admin" css={linkContainer}>
                     <p css={[link(theme)]}>Admin</p>
                   </Link>
                 )
-              }
-              {
-                slugs.length > Number(0) && slugs.map((slug) => (
-                  <Link to={`/${slug}`} css={linkContainer}>
-                    <p css={[link(theme)]}>{titleCase(slug)}</p>
-                  </Link>
-                ))
               }
             </div>
           </nav>

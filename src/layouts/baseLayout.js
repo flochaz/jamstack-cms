@@ -1,14 +1,14 @@
-import React from 'react'
+import React from 'react';
 import { css } from '@emotion/core'
 import {
   ContextProviderComponent, BlogContext
 } from '../context/mainContext'
 import { Link } from 'gatsby'
 import { Auth, Hub } from 'aws-amplify'
-import logo from '../images/logo.png'
-import logoLight from '../images/logoLight.png'
-import logoDank from '../images/logoDank.png'
-import logoReactive from '../images/logoReactive.png'
+import logo from '../images/leCollectif.png'
+import logoLight from '../images/leCollectif.png'
+import logoDank from '../images/leCollectif.png'
+import logoReactive from '../images/leCollectif.png'
 import "easymde/dist/easymde.min.css"
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -69,7 +69,7 @@ class BaseLayout extends React.Component {
             </Link>
             <div css={menu}>
               <Link to="/" css={linkContainer}>
-                <p css={[link(theme)]}>Blog</p>
+                <p css={[link(theme)]}>Acceuil</p>
               </Link>
               {
                 slugs.length > Number(0) && slugs.map((slug) => (
@@ -159,7 +159,7 @@ const footerRight = css`
 `
 
 const logoStyle = css`
-  width: 200px;
+  height: 50px;
   margin: 14px 0px 0px;
 `
 

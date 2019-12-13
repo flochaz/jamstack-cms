@@ -62,7 +62,7 @@ class BlogIndex extends React.Component {
       <SiteContainer {...this.props}> 
           <SEO title="All posts" />
           <div css={mainContainer}>
-            <h1 css={heading(theme)}>Welcome to the full stack CMS built for the modern age.</h1>
+            <h1 css={heading(theme)}>Bienvenue au Collectif de Grasse</h1>
             <div css={authorInfoStyle(theme, authorImages)}>
               {
                 authorImages && authorImages.map((image, index) => (

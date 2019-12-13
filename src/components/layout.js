@@ -33,7 +33,7 @@ class Layout extends React.Component {
             </Link>
             <div css={menu}>
               <Link to="/" css={linkContainer}>
-                <p css={link(theme)}>Blog</p>
+                <p css={link(theme)}>Acceuil</p>
               </Link>
               <Link to="/about" css={linkContainer}>
                 <p css={link(theme)}>About Me</p>
